@@ -1,36 +1,111 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+
 <html>
-<head>
-<meta charset=utf-8/>
-<title>Lab 1. Introduction to HTML5 and HLS</title>
-  
-  <!--
-  Embed needed js libraries for video player. Note, libraries needs to be hosted on your server, under /js folder.
-   -->
-  <!--
-  Location for CSS if needed. Note, cascade style sheets needs to be hosted on your server, under /css folder.
-  -->
-   
+	<head>
+		<title>Full Motion</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		
+		
+    
+    <script src="./hls.js demo_files/jquery.min.js.download"></script>
+    <script src="./hls.js demo_files/bootstrap.min.js.download"></script>
+    <script src="./hls.js demo_files/FileSaver.min.js.download"></script>
+		
+		
+	</head>
+	<body  data-gr-c-s-loaded="true">
+				<section id="banner" data-video="images/banner">
+					<div class="inner">
+						<header>
+							<h1>Full Motion</h1>
+							<p>A website to open your online video links.</p>
+						</header>
+						<a href="#main" class="more">Learn More</a>
+					</div>
+				</section>
 
+			<!-- Main -->
+				<div id="main">
+				  <div class="inner">
 
-</head>
-<body>
-  <h1>My first HLS player</h1>
-  
-  <!--
-  location for your player window
-  -->
-  
-	<button type="button">Play</button>
-	<button type="button">Pause</button>
-	<button type="button">Stop</button>
-	<button type="button">Jump to 5 sec forward</button>
-	<button type="button">Jump to 5 sec backwards</button>	
-	
-	<p>Playlist</p>
-	
-	<input type="text" name="url1" size="100" value="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8"><button type="button">Load</button><br>
-	<input type="text" name="url2" size="100" value="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8"><button type="button">Load</button><br>
-	<button type="button">Shuffle</button>
-</body>
+					<!-- Boxes -->
+						<div class="thumbnails">
+
+							<div class="box">
+							  
+							</div>
+
+							<div class="box">
+								
+								</div>
+							</div>
+						</div>
+			        <div id="controls">
+				        <div id="customButtons"></div>
+					      <input id="streamURL" class="innerControls" type="text" value="">
+						<button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].play()">Play</button>
+						<label class="innerControls"> Player size:
+				          <select name="videoSize" id="videoSize" style="float:right;">
+					          <option value="240">Tiny (240p)</option>
+					          <option value="384">Small (384p)</option>
+					          <option value="480">Medium (480p)</option>
+					          <option value="720" selected="">Large (720p)</option>
+					          <option value="1080">Huge (1080p)</option>
+				            </select>
+				        </label>
+					      <label class="innerControls"> Current video-resolution: <span id="currentResolution">1280 x 720</span> </label>
+				      </div>
+<p></p>
+				   
+					</div>
+				</div>
+
+			<!-- Footer -->
+				<footer id="footer">
+				  <video id="video" controls="" class="videoCentered" src="blob:https://video-dev.github.io/4b4214d0-f001-460b-ac7b-bb1fb6146c70" __idm_id__="241576961"></video>
+				  <span class="main-container">
+	            <canvas id="bufferedCanvas" height="15" class="videoCentered" onclick="onClickBufferedRange(event);" width="720" style="display: block;"></canvas>
+    </span></footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<div class="center" style="text-align: center;" id="toggleButtons">
+			  <button type="button" class="btn btn-sm" onclick="toggleTab(&#39;playbackControlTab&#39;);">Playback</button>
+		    </div>
+			<div class="center" id="playbackControlTab" style="display: none;">
+			  <h4>Playback</h4>
+			  <center>
+			    <p>
+			      <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].play()">Play</button>
+			      <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].pause()">Pause</button>
+		        </p>
+			    <p>
+			      <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime-=5">- 5 s</button>
+			      <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime+=5">+ 5 s</button>
+		        </p>
+			    <p>
+			      <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime=$(&#39;#seek_pos&#39;).val()">Seek to </button>
+			      <input type="text" id="seek_pos" size="8"  wonkeydown="if(window.event.keyCode==&#39;13&#39;){$(&#39;#video&#39;)[0].currentTime=$(&#39;#seek_pos&#39;).val();}">
+		        </p>
+		      </center>
+		    </div>
+			 
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+		    
+            <script src="./hls.js demo_files/canvas.js.download"></script>
+            <script src="./hls.js demo_files/metrics.js.download"></script>
+            <script src="./hls.js demo_files/jsonpack.js.download"></script>
+
+    
+           <script src="./hls.js demo_files/hls.js.download"></script>
+           <script src="./hls.js demo_files/hls-demo.js.download"></script>
+		
+	</body>
 </html>

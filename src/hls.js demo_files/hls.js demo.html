@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://video-dev.github.io/hls.js/demo/ -->
+<html class="gr__video-dev_github_io"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style id="stndz-style"></style>
+
+    
+
+    <title>hls.js demo</title>
+
+    <link rel="stylesheet" href="./hls.js demo_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./hls.js demo_files/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="./hls.js demo_files/style.css">
+
+    <script src="./hls.js demo_files/jquery.min.js.download"></script>
+    <script src="./hls.js demo_files/bootstrap.min.js.download"></script>
+    <script src="./hls.js demo_files/FileSaver.min.js.download"></script>
+  </head>
+
+  <body data-gr-c-s-loaded="true">
+  <div class="main-container">
+    <header>
+      </header>
+    <div id="controls">
+
+        <div id="customButtons"></div>
+
+        <select id="streamSelect" class="innerControls">
+          <option value="" selected="">Select a test-stream from drop-down menu. Or enter custom URL below</option>
+        <option value="bbb">Big Buck Bunny - adaptive qualities</option><option value="bigBuckBunny480p">Big Buck Bunny - 480p only</option><option value="arte">ARTE China,ABR</option><option value="deltatreDAI">Ad-insertion in event stream</option><option value="issue666">hls.js/issues/666</option><option value="closedCaptions">CNN special report, with CC</option><option value="oceansAES">AES encrypted,ABR</option><option value="mp3Audio">MP3 VOD demo</option><option value="mpegAudioOnly">MPEG Audio Only demo</option><option value="fmp4">HLS fMP4 Angel-One multiple audio-tracks</option><option value="fmp4Bitmovin">HLS fMP4 by Bitmovin</option><option value="offset_pts">DK Turntable, PTS shifted by 2.3s</option><option value="angelOneShakaWidevine">Shaka-packager Widevine DRM (EME) HLS-fMP4 - Angel One Demo</option><option value="audioOnlyMultipleLevels">Multiple non-alternate audio levels</option><option value="pdtDuplicate">Stream with duplicate sequential PDT values</option><option value="pdtLargeGap">PDTs with large gaps following discontinuities</option><option value="pdtBadValues">PDTs with bad values</option><option value="pdtOneValue">One PDT, no discontinuities</option><option value="noTrackIntersection">Audio/video track PTS values do not intersect; 10 second start gap</option><option value="altAudioNoVideoCodecSignaled">Alternate audio track, but no video codec is signaled in the master manifest</option><option value="altAudioAndTracks">Alternate audio tracks, and multiple VTT tracks</option></select>
+
+        <input id="streamURL" class="innerControls" type="text" value="">
+      <label class="innerControls">
+          Player size:
+          <select id="videoSize" style="float:right;">
+            <option value="240">Tiny (240p)</option>
+            <option value="384">Small (384p)</option>
+            <option value="480">Medium (480p)</option>
+            <option value="720" selected="">Large (720p)</option>
+            <option value="1080">Huge (1080p)</option>
+        </select>
+      </label>
+
+      <label class="innerControls">
+          Current video-resolution:
+          <span id="currentResolution">1280 x 720</span>
+      </label>
+      </div>
+
+      <video id="video" controls="" autoplay="" class="videoCentered" src="blob:https://video-dev.github.io/4b4214d0-f001-460b-ac7b-bb1fb6146c70" __idm_id__="241576961"></video>
+
+      <br>
+
+    <canvas id="bufferedCanvas" height="15" class="videoCentered" onclick="onClickBufferedRange(event);" width="720" style="display: block;"></canvas>
+
+      <br><br>
+      <label class="center">Error:</label>
+    <pre id="errorOut" class="center" style="white-space: pre-wrap;"></pre>
+    <div class="center" style="text-align: center;" id="toggleButtons">
+      <div class="center" style="text-align: center;" id="toggleButtons2">
+        <button type="button" class="btn btn-sm" onClick="toggleTab(&#39;playbackControlTab&#39;);">Playback</button>
+</div>
+    </div>
+    <div class="center" id="playbackControlTab" style="display: none;">
+      <h4>Playback</h4>
+        <center>
+            <p>
+              <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].play()">Play</button>
+              <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].pause()">Pause</button>
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime-=10">- 10 s</button>
+              <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime+=10">+ 10 s</button>
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-sm btn-info" onclick="$(&#39;#video&#39;)[0].currentTime=$(&#39;#seek_pos&#39;).val()">Seek to </button>
+              <input type="text" id="seek_pos" size="8" onkeydown="if(window.event.keyCode==&#39;13&#39;){$(&#39;#video&#39;)[0].currentTime=$(&#39;#seek_pos&#39;).val();}">
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-xs btn-warning" onclick="hls.attachMedia($(&#39;#video&#39;)[0])">Attach media</button>
+              <button type="button" class="btn btn-xs btn-warning" onclick="hls.detachMedia()">Detach media</button>
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-xs btn-warning" onclick="hls.startLoad()">Start loading</button>
+              <button type="button" class="btn btn-xs btn-warning" onclick="hls.stopLoad()">Stop loading</button>
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-xs btn-warning" onclick="hls.recoverMediaError()">Recover media-error</button>
+            </p>
+
+            <p>
+              <button type="button" class="btn btn-xs btn-warning" onclick="createfMP4(&#39;audio&#39;);">Create audio-fmp4</button>
+              <button type="button" class="btn btn-xs btn-warning" onclick="createfMP4(&#39;video&#39;)">Create video-fmp4</button>
+            </p>
+        </center>
+
+      </div>
+
+      <div class="center" id="qualityLevelControlTab" style="display: none;">
+        <h4>Quality-levels</h4>
+        <center>
+            <table>
+                <tbody><tr>
+                  <td>
+                    <p>Currently played level:</p>
+                  </td>
+                  <td>
+                    <div id="currentLevelControl" style="display: inline;"><button type="button" class="btn btn-sm btn-primary" onclick="hls.currentLevel=-1">auto</button><button type="button" class="btn btn-sm btn-success" onclick="hls.currentLevel=0">0 (240p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.currentLevel=1">1 (380p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.currentLevel=2">2 (480p)</button><button type="button" class="btn btn-sm btn-primary" onclick="hls.currentLevel=3">3 (720p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.currentLevel=4">4 (1080p)</button></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>Next level loaded:</p>
+                  </td>
+                  <td>
+                    <div id="nextLevelControl" style="display: inline;"><button type="button" class="btn btn-sm btn-primary" onclick="hls.nextLevel=-1">auto</button><button type="button" class="btn btn-sm btn-success" onclick="hls.nextLevel=0">0 (240p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.nextLevel=1">1 (380p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.nextLevel=2">2 (480p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.nextLevel=3">3 (720p)</button><button type="button" class="btn btn-sm btn-primary" onclick="hls.nextLevel=4">4 (1080p)</button></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>Currently loaded level:</p>
+                  </td>
+                  <td>
+                    <div id="loadLevelControl" style="display: inline;"><button type="button" class="btn btn-sm btn-primary" onclick="hls.loadLevel=-1">auto</button><button type="button" class="btn btn-sm btn-success" onclick="hls.loadLevel=0">0 (240p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.loadLevel=1">1 (380p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.loadLevel=2">2 (480p)</button><button type="button" class="btn btn-sm btn-success" onclick="hls.loadLevel=3">3 (720p)</button><button type="button" class="btn btn-sm btn-primary" onclick="hls.loadLevel=4">4 (1080p)</button></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>Cap-limit level (maximum):</p>
+                  </td>
+                  <td>
+                    <div id="levelCappingControl" style="display: inline;"><button type="button" class="btn btn-sm btn-primary" onclick="levelCapping=hls.autoLevelCapping=-1;updateLevelInfo();onDemoConfigChanged();">auto</button><button type="button" class="btn btn-sm btn-success" onclick="levelCapping=hls.autoLevelCapping=0;updateLevelInfo();onDemoConfigChanged();">0 (240p)</button><button type="button" class="btn btn-sm btn-success" onclick="levelCapping=hls.autoLevelCapping=1;updateLevelInfo();onDemoConfigChanged();">1 (380p)</button><button type="button" class="btn btn-sm btn-success" onclick="levelCapping=hls.autoLevelCapping=2;updateLevelInfo();onDemoConfigChanged();">2 (480p)</button><button type="button" class="btn btn-sm btn-success" onclick="levelCapping=hls.autoLevelCapping=3;updateLevelInfo();onDemoConfigChanged();">3 (720p)</button><button type="button" class="btn btn-sm btn-success" onclick="levelCapping=hls.autoLevelCapping=4;updateLevelInfo();onDemoConfigChanged();">4 (1080p)</button></div>
+                  </td>
+                </tr>
+              </tbody></table>
+        </center>
+      </div>
+
+      <div class="center" id="audioTrackControlTab" style="display: none;">
+        <h4>Audio-tracks</h4>
+        <table>
+          <tbody><tr>
+            <td>Current audio-track:</td>
+            <td width="10px">None selected</td>
+            <td> <div id="audioTrackControl" style="display: inline;"></div> </td>
+          </tr>
+        </tbody></table>
+      </div>
+
+      <div class="center" id="metricsDisplayTab" style="display: none;">
+        <h4>Real-time metrics</h4>
+        <div id="metricsButton" style="display: block;">
+          <button type="button" class="btn btn-xs btn-info" onclick="$(&#39;#metricsButtonWindow&#39;).toggle();$(&#39;#metricsButtonFixed&#39;).toggle();windowSliding=!windowSliding; refreshCanvas()">toggle sliding/fixed window</button><br>
+          <div id="metricsButtonWindow">
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(0)">window ALL</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(2000)">2s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(5000)">5s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(10000)">10s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(20000)">20s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(30000)">30s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(60000)">60s</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSetSliding(120000)">120s</button><br>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeZoomIn()">Window Zoom In</button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeZoomOut()">Window Zoom Out</button><br>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSlideLeft()"> &lt;&lt;&lt; Window Slide </button>
+            <button type="button" class="btn btn-xs btn-info" onclick="timeRangeSlideRight()">Window Slide &gt;&gt;&gt; </button><br>
+          </div>
+          <div id="metricsButtonFixed" style="display: none;">
+            <button type="button" class="btn btn-xs btn-info" onclick="windowStart=$(&#39;#windowStart&#39;).val()">fixed window start(ms)</button>
+            <input type="text" id="windowStart" defaultvalue="0" size="8" onkeydown="if(window.event.keyCode==&#39;13&#39;){windowStart=$(&#39;#windowStart&#39;).val();}">
+            <button type="button" class="btn btn-xs btn-info" onclick="windowEnd=$(&#39;#windowEnd&#39;).val()">fixed window end(ms)</button>
+            <input type="text" id="windowEnd" defaultvalue="10000" size="8" onkeydown="if(window.event.keyCode==&#39;13&#39;){windowEnd=$(&#39;#windowEnd&#39;).val();}"><br>
+          </div>
+          <button type="button" class="btn btn-xs btn-success" onclick="goToMetrics()" style="font-size:18px">metrics link</button>
+          <button type="button" class="btn btn-xs btn-success" onclick="goToMetricsPermaLink()" style="font-size:18px">metrics permalink</button>
+          <button type="button" class="btn btn-xs btn-success" onclick="copyMetricsToClipBoard()" style="font-size:18px">copy metrics to clipboard</button>
+          <canvas id="bufferTimerange_c" width="1487" height="100" style="border: 1px solid rgb(0, 0, 0); display: inline-block;" onmousedown="timeRangeCanvasonMouseDown(event)" onmousemove="timeRangeCanvasonMouseMove(event)" onmouseup="timeRangeCanvasonMouseUp(event)" onmouseout="timeRangeCanvasonMouseOut(event);"></canvas>
+          <canvas id="bitrateTimerange_c" width="1487" height="100" style="border: 1px solid rgb(0, 0, 0); display: inline-block;"></canvas>
+          <canvas id="bufferWindow_c" width="1487" height="100" style="border: 1px solid rgb(0, 0, 0); display: none;" onmousemove="windowCanvasonMouseMove(event);"></canvas>
+          <canvas id="videoEvent_c" width="1487" height="280" style="border: 1px solid rgb(0, 0, 0); display: inline-block;"></canvas>
+          <canvas id="loadEvent_c" width="1487" height="240" style="border: 1px solid rgb(0, 0, 0); display: inline-block;"></canvas><br>
+        </div>
+      </div>
+
+      <div class="center" id="statsDisplayTab" style="display: none;">
+        <h4>Buffer &amp; Statistics</h4>
+        <label>Buffer state:</label>
+        <pre id="bufferedOut" style="display: block;">Duration: 634.584
+Buffered: [0, 79.923232] 
+Seekable: [0, 634.584] 
+Played: 
+Buffer for audio contains: [0, 79.946302] 
+Buffer for video contains: [0, 79.923232] 
+</pre>
+        <label>General stats:</label>
+        <pre id="statisticsOut">{
+	"autoLevelAvg": 3,
+	"autoLevelCappingLast": -1,
+	"autoLevelCappingMax": -1,
+	"autoLevelCappingMin": -1,
+	"autoLevelLast": 3,
+	"autoLevelMax": 3,
+	"autoLevelMin": 3,
+	"autoLevelSwitch": 0,
+	"fragAvgKbps": null,
+	"fragAvgLatency": 32,
+	"fragAvgProcess": 191,
+	"fragBuffered": 8,
+	"fragBufferedBytes": 60533368,
+	"fragChangedAuto": 1,
+	"fragLastKbps": null,
+	"fragLastProcess": 145.9749999921769,
+	"fragMaxKbps": null,
+	"fragMaxLatency": 114.03499997686595,
+	"fragMaxProcess": 386.04999997187406,
+	"fragMinKbps": null,
+	"fragMinLatency": 5.345000012312084,
+	"fragMinProcess": 117.0200000051409,
+	"fraglastLatency": 10.454999981448054,
+	"fragparsingKbps": 524064,
+	"fragparsingMs": 924,
+	"levelNb": 5,
+	"levelParsed": 2,
+	"levelParsingUs": 5195,
+	"levelStart": 3,
+	"tagList": {
+		"0": {
+			"0": "INF",
+			"1": "10.000"
+		}
+	}
+}</pre>
+      </div>
+
+  </div>
+
+    <footer>
+      <br><br><br><br><br><br>
+    </footer>
+
+    <!-- Demo page required libs -->
+    <script src="./hls.js demo_files/canvas.js.download"></script>
+    <script src="./hls.js demo_files/metrics.js.download"></script>
+    <script src="./hls.js demo_files/jsonpack.js.download"></script>
+
+    <!-- demo build -->
+    <script src="./hls.js demo_files/hls.js.download"></script>
+    <script src="./hls.js demo_files/hls-demo.js.download"></script>
+  
+
+</body></html>
